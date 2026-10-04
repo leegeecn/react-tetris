@@ -1,0 +1,35 @@
+name: Deploy React Tetris to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 源码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 安装依赖并打包
+        run: |
+          npm install
+          npm run build
+        env:
+          PUBLIC_URL: ./
+
+      - name: 部署到 gh-pages 分支
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          branch: gh-pages
